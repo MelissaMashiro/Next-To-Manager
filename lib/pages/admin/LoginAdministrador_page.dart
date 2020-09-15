@@ -18,6 +18,15 @@ class _LoginAdminState extends State<LoginAdmin> {
   String _password;
   String _emailRecuperation;
   String message = " ";
+  //icon password toggle
+  bool _isHidden = true;
+
+  void _toggleVisibility() {
+    setState(() {
+      _isHidden = !_isHidden;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,7 +60,7 @@ class _LoginAdminState extends State<LoginAdmin> {
                               email = value;
                               print(email);
                             },
-                            hintText: "Ingrese su correo electrónico",
+                            hintText: "correo electrónico",
                             keyboardType: TextInputType.emailAddress,
                           ),
                           SizedBox(
@@ -59,8 +68,13 @@ class _LoginAdminState extends State<LoginAdmin> {
                           ),
                           MyLoginField(
                             hintText: "Ingrese su contraseña",
-                            obscureText: true,
-                            icon: Icons.remove_red_eye,
+                            obscureText: _isHidden,
+                            icon: IconButton(
+                              onPressed: _toggleVisibility,
+                              icon: _isHidden
+                                  ? Icon(Icons.visibility_off)
+                                  : Icon(Icons.visibility),
+                            ),
                             onChanged: (String value) {
                               _password = value;
                               print(_password);

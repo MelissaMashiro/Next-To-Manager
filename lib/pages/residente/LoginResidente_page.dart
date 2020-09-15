@@ -27,6 +27,15 @@ class _LoginResidenteState extends State<LoginResidente> {
   String _password;
   String _emailRecuperation;
   String message = " ";
+  //icon password toggle
+  String hintTextPassword = "contraseña";
+  bool _isHidden = true;
+
+  void _toggleVisibility() {
+    setState(() {
+      _isHidden = !_isHidden;
+    });
+  }
 
   TextEditingController controlEmail = new TextEditingController();
   TextEditingController controlPassword = new TextEditingController();
@@ -131,7 +140,7 @@ class _LoginResidenteState extends State<LoginResidente> {
                                 email = value;
                                 print(email);
                               },
-                              hintText: "Ingrese su correo electrónico",
+                              hintText: "correo electrónico",
                               keyboardType: TextInputType.emailAddress,
                             ),
                             SizedBox(
@@ -139,13 +148,18 @@ class _LoginResidenteState extends State<LoginResidente> {
                             ),
                             MyLoginField(
                               controller: controlPassword,
-                              hintText: "Ingrese su contraseña",
-                              obscureText: true,
-                              icon: Icons.remove_red_eye,
                               onChanged: (String value) {
                                 _password = value;
                                 print(_password);
                               },
+                              hintText: "Ingrese su contraseña",
+                              obscureText: _isHidden,
+                              icon: IconButton(
+                                onPressed: _toggleVisibility,
+                                icon: _isHidden
+                                    ? Icon(Icons.visibility_off)
+                                    : Icon(Icons.visibility),
+                              ),
                             ),
                             Text(
                               message,

@@ -7,12 +7,13 @@ class MyLoginField extends StatelessWidget {
     @required this.hintText,
     this.icon,
     this.onChanged,
-    this.obscureText = false, this.controller,
+    this.obscureText = false,
+    this.controller,
   });
 
   final TextInputType keyboardType;
   final String hintText;
-  final IconData icon;
+  final Widget icon;
   final Function onChanged;
   final bool obscureText;
   final TextEditingController controller;
@@ -33,10 +34,7 @@ class MyLoginField extends StatelessWidget {
         decoration: InputDecoration(
             hintText: hintText,
             hintStyle: TextStyle(color: Colors.grey),
-            suffixIcon: Icon(
-              icon,
-              color: Colors.grey[800],
-            )),
+            suffixIcon: hintText == "correo electrónico" ? null : icon),
       ),
     );
   }
