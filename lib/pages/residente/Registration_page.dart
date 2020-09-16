@@ -23,7 +23,8 @@ class _RegistrationPageState extends State<RegistrationPage> {
   TextEditingController controlEmail = new TextEditingController();
   TextEditingController controlCedula = new TextEditingController();
   TextEditingController controlPassword = new TextEditingController();
-
+  TextEditingController controlConfirPassword = new TextEditingController();
+  bool mostrarRequisitosPw = false;
   String torreSeleccionada;
   String apartamentoSeleccionado;
   bool validateRegistro = false;
@@ -82,7 +83,9 @@ class _RegistrationPageState extends State<RegistrationPage> {
               _crearApellido(),
               _crearCedula(),
               _crearEmail(),
+              _mostrarPasswordRequisits(),
               _crearPassword(),
+              _crearConfirmacionPassword(),
               _crearTorre(),
               _crearApartamento(),
               _crearTelefono(),
@@ -157,6 +160,32 @@ class _RegistrationPageState extends State<RegistrationPage> {
     );
   }
 
+  Widget _mostrarPasswordRequisits() {
+    if (mostrarRequisitosPw == true) {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 18.0),
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 5.0),
+          width: double.infinity,
+          color: Color(0xFFDFDCD6),
+          child: Text(
+              "La contraseña debe tener al menos: \n * Mínimo 6 caracteres \n * 1 Letra mayúscula\n * 1 Letra en minúscula\n * 1 número \n * 1 Caracter especial"),
+        ),
+      );
+    } else {
+      return Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 18.0),
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 5.0),
+          width: double.infinity,
+          color: Color(0xFFDFDCD6),
+          child: Text(
+              'Click en el icono de ayuda para ver los requisitos de la contraseña'),
+        ),
+      );
+    }
+  }
+
   Widget _crearPassword() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
@@ -166,12 +195,38 @@ class _RegistrationPageState extends State<RegistrationPage> {
         obscureText: true,
         decoration: InputDecoration(
           labelText: 'contraseña',
+          suffixIcon: IconButton(
+            onPressed: () {
+              setState(() {
+                mostrarRequisitosPw = true;
+              });
+            },
+            icon: Icon(Icons.help),
+          ),
         ),
-        validator: validatePassword,
+        validator: isPasswordCompliant,
         onSaved: (String val) {
           _password = val;
         },
       ),
+    );
+  }
+
+  Widget _crearConfirmacionPassword() {
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
+      child: TextFormField(
+          controller: controlConfirPassword,
+          keyboardType: TextInputType.text,
+          obscureText: true,
+          decoration: InputDecoration(
+            labelText: 'Confirmar contraseña',
+          ),
+          validator: (val) {
+            if (val.isEmpty) return 'Empty';
+            if (val != controlPassword.text) return 'Not Match';
+            return null;
+          }),
     );
   }
 
@@ -254,6 +309,7 @@ class _RegistrationPageState extends State<RegistrationPage> {
       elevation: 0.0,
       color: Colors.yellow.shade200,
       onPressed: () {
+        mostrarRequisitosPw = false;
         _validateInputs();
         //print(controlNombres);
       },

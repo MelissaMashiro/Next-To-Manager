@@ -105,6 +105,10 @@ class _CrearSolicitudPageState extends State<CrearSolicitudPage> {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 15.0, horizontal: 10.0),
       child: TextFormField(
+        validator: (val) {
+          if (val.isEmpty) return 'Empty';
+          return null; //sino esta vacio, retorne null
+        },
         controller: controlDescripcion,
         maxLines: 8,
         decoration: InputDecoration.collapsed(

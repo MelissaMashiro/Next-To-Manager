@@ -26,7 +26,7 @@ class MyLoginField extends StatelessWidget {
       child: TextField(
         controller: controller,
         style: TextStyle(color: Colors.grey),
-        cursorColor: Colors.white,
+        cursorColor: Colors.black,
         onChanged: onChanged,
         obscureText: obscureText,
         textAlign: TextAlign.center,

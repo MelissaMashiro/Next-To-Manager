@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:next_to_manager/pages/LoginSelect_page.dart';
 import 'package:next_to_manager/pages/residente/CrearSolicitud_page.dart';
 import 'package:next_to_manager/pages/residente/Historial_page.dart';
 import 'package:next_to_manager/pages/residente/LoginResidente_page.dart';
@@ -17,7 +18,8 @@ class _HomeResidentePageState extends State<HomeResidentePage> {
 //SHARED PREFERENCES
     SharedPreferences pref = await SharedPreferences.getInstance();
     if (pref.getBool("isLogin") == false) {
-      Navigator.pushNamed(context, LoginResidente.id);
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (BuildContext context) => LoginSelect()));
     }
   }
 
@@ -25,7 +27,9 @@ class _HomeResidentePageState extends State<HomeResidentePage> {
 //SHARED PREFERENCES
     SharedPreferences pref = await SharedPreferences.getInstance();
     pref.setBool("isLogin", false);
-    Navigator.pushNamed(context, LoginResidente.id);
+    //Navigator.pushNamed(context, LoginResidente.id);
+    Navigator.pushReplacement(context,
+        MaterialPageRoute(builder: (BuildContext context) => LoginSelect()));
   }
 
   Future _checkUser() async {
@@ -48,9 +52,6 @@ class _HomeResidentePageState extends State<HomeResidentePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("HOME"),
-      ),
       body: Container(
         decoration: BoxDecoration(
           image: DecorationImage(

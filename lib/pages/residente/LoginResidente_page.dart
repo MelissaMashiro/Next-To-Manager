@@ -6,6 +6,7 @@ import 'package:next_to_manager/components/recursos/RoundedButton.dart';
 import 'package:next_to_manager/components/recursos/logo.dart';
 import 'package:next_to_manager/components/recursos/metodosValidacion.dart';
 import 'package:next_to_manager/constants.dart';
+import 'package:next_to_manager/pages/admin/homeAdmin_page.dart';
 import 'package:next_to_manager/pages/residente/Registration_page.dart';
 import 'package:next_to_manager/pages/residente/homeResidente_page.dart';
 import 'package:http/http.dart' as http;
@@ -79,9 +80,12 @@ class _LoginResidenteState extends State<LoginResidente> {
             msg: 'Bienvenido a Next To Manager',
             gravity: ToastGravity.CENTER,
             backgroundColor: Colors.green);
-
-        // await FlutterSession().set('token', controlEmail.text);
-        Navigator.pushNamed(context, HomeResidentePage.id);
+//yendo al dashboard
+        //Navigator.pushNamed(context, HomeResidentePage.id);
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (BuildContext context) => HomeResidentePage()));
       } else if (mapaData.containsValue('false')) {
         //SHARED PREFERENCES
         SharedPreferences pref = await SharedPreferences.getInstance();

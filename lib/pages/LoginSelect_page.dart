@@ -54,7 +54,12 @@ class LoginSelect extends StatelessWidget {
                   borderRadius: BorderRadius.circular(30.0),
                   child: MaterialButton(
                     onPressed: () {
-                      Navigator.pushNamed(context, LoginResidente.id);
+                      // Navigator.pushNamed(context, LoginResidente.id);
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  LoginResidente()));
                     },
                     minWidth: 100.0,
                     height: 60.0,
