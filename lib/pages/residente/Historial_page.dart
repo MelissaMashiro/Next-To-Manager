@@ -1,5 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:next_to_manager/constants.dart';
+import 'package:http/http.dart' as http;
+import 'package:next_to_manager/pages/residente/Detalles_page.dart';
+import 'package:next_to_manager/providers/providersMetods.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class HistorialPage extends StatefulWidget {
   static String id = 'historial_page';
@@ -9,7 +15,7 @@ class HistorialPage extends StatefulWidget {
 }
 
 class _HistorialPageState extends State<HistorialPage> {
-  List<dynamic> data = List<dynamic>(3);
+  bool _isInAsyncCall = false;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -20,23 +26,55 @@ class _HistorialPageState extends State<HistorialPage> {
         body: Container(
           padding: EdgeInsets.fromLTRB(10, 10, 10, 0),
           width: double.maxFinite,
-          child: ListView(
-            children: _listaSolicitudes(data),
-          ),
+          child: ModalProgressHUD(
+              color: Colors.black,
+              inAsyncCall: _isInAsyncCall,
+              opacity: 0.5,
+              progressIndicator: CircularProgressIndicator(
+                backgroundColor: kMainColor,
+                valueColor: AlwaysStoppedAnimation<Color>(kMainColorDark),
+              ),
+              child: _lista()),
         ),
       ),
     );
   }
 
-  List<Widget> _listaSolicitudes(List<dynamic> data) {
+  Widget _lista() {
+    return FutureBuilder(
+      //el fuuture uilder no puede retornar una lista, solo un Widget
+
+      future: solicitudesProvider.cargarData(),
+      initialData: [], //es la info que tendra por defecto mientras no se ha resuelto ese future(podria ser una fila vacia)
+      builder: (context, AsyncSnapshot<List<dynamic>> snapshot) {
+        //retonra un widget builder osea algo q permitira dibujar en la pantalla
+
+        return ListView(
+          //necesito leer un archivo Json para ir a gregando alli todas las opciones y posterior rmente revisalas en base a un JSON
+          children: _listaSolicitudes(snapshot.data, context),
+        );
+      },
+    );
+  }
+
+  List<Widget> _listaSolicitudes(List<dynamic> data, BuildContext context) {
     final List<Widget> cards = [];
 
-    data.forEach((element) {
+    data.forEach((solicitud) {
       final card = SolicitudCard(
-        fechaSolicitud: "MIERCOLES 2 DE SEPTIEMBRE",
-        onPressed: null,
-        tipoSolicitud: "SUGERENCIA",
-        tituloSolicitud: "Recoleccion de plasticos",
+        fechaSolicitud: solicitud['fecha'],
+        onPressed: () {
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (BuildContext context) => DetalleSolicitudPage(
+                        descripcion: solicitud['descripcion'],
+                        fecha: solicitud['fecha'],
+                        motivo: solicitud['motivo'],
+                      )));
+        },
+        tipoSolicitud: solicitud['tipo_solicitud'],
+        tituloSolicitud: solicitud['motivo'],
       );
       cards.add(card);
       cards.add(
@@ -53,6 +91,19 @@ class _HistorialPageState extends State<HistorialPage> {
     });
     return cards;
   }
+/*
+  List<dynamic> dataSoli;
+  void verSolicitudes() async {
+    var url =
+        "https://ssolutiones.com/prueba_nextToManager/obtenerSolicitudes.php";
+
+    var res = await http.post(url);
+
+    dataSoli = json.decode(res.body);
+    Map mapaData = dataSoli[0] as Map;
+    print(mapaData);
+    //print(dataSoli);
+  }*/
 }
 
 class SolicitudCard extends StatelessWidget {

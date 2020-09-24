@@ -18,8 +18,10 @@ class _HomeResidentePageState extends State<HomeResidentePage> {
 //SHARED PREFERENCES
     SharedPreferences pref = await SharedPreferences.getInstance();
     if (pref.getBool("isLogin") == false) {
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (BuildContext context) => LoginSelect()));
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (BuildContext context) => LoginResidente()));
     }
   }
 
@@ -65,7 +67,6 @@ class _HomeResidentePageState extends State<HomeResidentePage> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text("Bienvenida " + emailUser),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               mainAxisSize: MainAxisSize.min,
@@ -78,7 +79,11 @@ class _HomeResidentePageState extends State<HomeResidentePage> {
                         ),
                         child: InkWell(
                           onTap: () {
-                            Navigator.pushNamed(context, CrearSolicitudPage.id);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => CrearSolicitudPage(
+                                        emailController: emailUser)));
                           },
                           child: Image.asset(
                             'assets/images/quote.png',

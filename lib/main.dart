@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
         SugerenciasPage.id: (context) => SugerenciasPage(),
         QuejasPage.id: (context) => QuejasPage(),
         ReclamosPage.id: (context) => ReclamosPage(),
-        CrearSolicitudPage.id: (context) => CrearSolicitudPage()
+        CrearSolicitudPage.id: (context) => CrearSolicitudPage(),
       },
     );
   }

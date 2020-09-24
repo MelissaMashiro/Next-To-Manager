@@ -7,18 +7,27 @@ import 'homeResidente_page.dart';
 
 class CrearSolicitudPage extends StatefulWidget {
   static String id = 'crear_solicitud_page';
+  final String emailController;
 
+  const CrearSolicitudPage({Key key, this.emailController}) : super(key: key);
   @override
   _CrearSolicitudPageState createState() => _CrearSolicitudPageState();
 }
 
 class _CrearSolicitudPageState extends State<CrearSolicitudPage> {
+  @override
+  void initState() {
+    super.initState();
+    verUsuarioData();
+  }
+
   TextEditingController controltipo = new TextEditingController();
   TextEditingController controlMotivo = new TextEditingController();
   TextEditingController controlDescripcion = new TextEditingController();
   bool validateCreacionSolicitud = false;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _autoValidate = false;
+  String idUsuario;
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +72,9 @@ class _CrearSolicitudPageState extends State<CrearSolicitudPage> {
               ]),
           child: Column(
             children: <Widget>[
-              Text('FORMULARIO', style: TextStyle(fontSize: 20.0)),
+              Text("FORMULARIO", style: TextStyle(fontSize: 20.0)),
+              Text('email remitente:' + widget.emailController),
+              _crearBotonPrueba(),
               _crearSpinner(),
               _crearMotivo(),
               _crearDescripcion(),
@@ -134,6 +145,21 @@ class _CrearSolicitudPageState extends State<CrearSolicitudPage> {
     }
   }
 
+  Widget _crearBotonPrueba() {
+    return RaisedButton(
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 50.0, vertical: 15.0),
+        child: Text('ENVIAR'),
+      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+      elevation: 0.0,
+      color: Colors.yellow.shade200,
+      onPressed: () {
+        verUsuarioData();
+      },
+    );
+  }
+
   Widget _crearBoton() {
     return RaisedButton(
       child: Container(
@@ -176,12 +202,35 @@ class _CrearSolicitudPageState extends State<CrearSolicitudPage> {
     }
   }
 
+  List<dynamic> dataUser;
+  void verUsuarioData() async {
+    var url =
+        "http://ssolutiones.com/prueba_nextToManager/obtenerUsuario.php?email=" +
+            widget.emailController;
+    var data = {
+      "email": widget.emailController,
+    };
+    var res = await http.post(url, body: data);
+
+    dataUser = json.decode(res.body);
+    Map mapaData = dataUser[0] as Map;
+    print(widget.emailController);
+    //print(dataUser);
+    print(mapaData);
+
+    setState(() {
+      idUsuario = mapaData['idUsuario'];
+    });
+  }
+
   List<dynamic> dataSoli;
   void agregarSolicitud() async {
+    verUsuarioData();
+    print("el id que llego a la funcion de registro:" + idUsuario);
     var url =
         "https://ssolutiones.com/prueba_nextToManager/agregarSolicitud.php";
     var data = {
-      "idUsuario": "37",
+      "idUsuario": idUsuario,
       "descripcion": controlDescripcion.text,
       "tipo_solicitud": _tipoSoli,
       "motivo": controlMotivo.text,
@@ -208,32 +257,6 @@ class _CrearSolicitudPageState extends State<CrearSolicitudPage> {
 
       print('Ocurrio un error al registrar la solicitud');
     }
-
-/*
-    for (var val in mapaData.keys) {
-      switch (mapaData[val]) {
-        case 'Tu solicitud fue registrada con exito.':
-          {
-            validateCreacionSolicitud = true;
-            setState(() {
-              _mostrarAlert(context);
-            });
-
-            print('Solicitud registrada exitosamente');
-          }
-          break;
-        default:
-          {
-            validateCreacionSolicitud = false;
-            setState(() {
-              _mostrarAlert(context);
-            });
-
-            print('Ocurrio un error al registrar la solicitud.');
-          }
-          break;
-      }
-    }*/
   }
 
   void _mostrarAlert(BuildContext context) {

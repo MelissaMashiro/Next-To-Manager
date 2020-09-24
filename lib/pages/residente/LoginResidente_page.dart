@@ -6,7 +6,6 @@ import 'package:next_to_manager/components/recursos/RoundedButton.dart';
 import 'package:next_to_manager/components/recursos/logo.dart';
 import 'package:next_to_manager/components/recursos/metodosValidacion.dart';
 import 'package:next_to_manager/constants.dart';
-import 'package:next_to_manager/pages/admin/homeAdmin_page.dart';
 import 'package:next_to_manager/pages/residente/Registration_page.dart';
 import 'package:next_to_manager/pages/residente/homeResidente_page.dart';
 import 'package:http/http.dart' as http;
@@ -29,7 +28,6 @@ class _LoginResidenteState extends State<LoginResidente> {
   String _emailRecuperation;
   String message = " ";
   //icon password toggle
-  String hintTextPassword = "contraseña";
   bool _isHidden = true;
 
   void _toggleVisibility() {
@@ -64,7 +62,7 @@ class _LoginResidenteState extends State<LoginResidente> {
 
       dataUser = json.decode(res.body);
       Map mapaData = dataUser[0] as Map;
-      print(mapaData);
+      //print(mapaData);
 
       if (mapaData.containsValue('true')) {
         //SHARED PREFERENCES
