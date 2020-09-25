@@ -5,6 +5,7 @@ import 'package:next_to_manager/components/recursos/logo.dart';
 import 'package:next_to_manager/components/recursos/metodosValidacion.dart';
 import 'package:next_to_manager/constants.dart';
 import 'package:next_to_manager/pages/admin/homeAdmin_page.dart';
+import 'package:next_to_manager/pages/admin/pruebaSolicitudes.dart';
 
 class LoginAdmin extends StatefulWidget {
   static String id = 'loginAdmin_page';
@@ -91,19 +92,11 @@ class _LoginAdminState extends State<LoginAdmin> {
                               style: TextStyle(color: kMainColorExtraLight),
                             ),
                             onPressed: () {
-                              bool emailValid = RegExp(
-                                      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-                                  .hasMatch(email);
-                              setState(() {
-                                if (emailValid == true) {
-                                  message = '';
-                                  Navigator.pushNamed(
-                                      context, HomeAdminPage.id);
-                                } else {
-                                  message =
-                                      'datos incorrectos, favor revisar el email o contraseña';
-                                }
-                              });
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (BuildContext context) =>
+                                          PruebaPaises()));
                             },
                             colour: Colors.grey[850],
                           ),

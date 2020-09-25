@@ -1,5 +1,5 @@
 import 'dart:io';
-
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:next_to_manager/constants.dart';
 import 'package:next_to_manager/pages/admin/LoginAdministrador_page.dart';
@@ -14,6 +14,8 @@ import 'package:next_to_manager/pages/LoginSelect_page.dart';
 import 'package:next_to_manager/pages/residente/Registration_page.dart';
 import 'package:next_to_manager/pages/residente/homeResidente_page.dart';
 
+import 'components/services/services.dart';
+
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(MyApp());
@@ -25,27 +27,32 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Next to Manager',
-      theme: ThemeData(
-        primaryColor: kMainColor,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => new SolicitudesService()),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Next to Manager',
+        theme: ThemeData(
+          primaryColor: kMainColor,
+          visualDensity: VisualDensity.adaptivePlatformDensity,
+        ),
+        initialRoute: LoginSelect.id,
+        routes: {
+          LoginSelect.id: (context) => LoginSelect(),
+          LoginAdmin.id: (context) => LoginAdmin(),
+          LoginResidente.id: (context) => LoginResidente(),
+          RegistrationPage.id: (context) => RegistrationPage(),
+          HomeResidentePage.id: (context) => HomeResidentePage(),
+          HomeAdminPage.id: (context) => HomeAdminPage(),
+          HistorialPage.id: (context) => HistorialPage(),
+          SugerenciasPage.id: (context) => SugerenciasPage(),
+          QuejasPage.id: (context) => QuejasPage(),
+          ReclamosPage.id: (context) => ReclamosPage(),
+          CrearSolicitudPage.id: (context) => CrearSolicitudPage(),
+        },
       ),
-      initialRoute: LoginSelect.id,
-      routes: {
-        LoginSelect.id: (context) => LoginSelect(),
-        LoginAdmin.id: (context) => LoginAdmin(),
-        LoginResidente.id: (context) => LoginResidente(),
-        RegistrationPage.id: (context) => RegistrationPage(),
-        HomeResidentePage.id: (context) => HomeResidentePage(),
-        HomeAdminPage.id: (context) => HomeAdminPage(),
-        HistorialPage.id: (context) => HistorialPage(),
-        SugerenciasPage.id: (context) => SugerenciasPage(),
-        QuejasPage.id: (context) => QuejasPage(),
-        ReclamosPage.id: (context) => ReclamosPage(),
-        CrearSolicitudPage.id: (context) => CrearSolicitudPage(),
-      },
     );
   }
 }
