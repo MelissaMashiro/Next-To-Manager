@@ -6,6 +6,7 @@ import 'package:next_to_manager/components/recursos/metodosValidacion.dart';
 import 'package:next_to_manager/constants.dart';
 import 'package:next_to_manager/pages/admin/homeAdmin_page.dart';
 import 'package:next_to_manager/pages/admin/pruebaSolicitudes.dart';
+import 'package:next_to_manager/pages/residente/services/my_api.dart';
 
 class LoginAdmin extends StatefulWidget {
   static String id = 'loginAdmin_page';
@@ -21,10 +22,32 @@ class _LoginAdminState extends State<LoginAdmin> {
   String message = " ";
   //icon password toggle
   bool _isHidden = true;
-
+  TextEditingController controlEmail = new TextEditingController();
+  TextEditingController controlPassword = new TextEditingController();
   void _toggleVisibility() {
     setState(() {
       _isHidden = !_isHidden;
+    });
+  }
+
+  bool _isInAsyncCall = false;
+
+  void userSignIn() async {
+    //dismiss keyboard during async call
+    FocusScope.of(context).requestFocus(new FocusNode());
+
+    //start the modal progress HUD
+    setState(() {
+      _isInAsyncCall = true;
+    });
+    //simulate a service call
+    Future.delayed(Duration(seconds: 1), () async {
+      MyAPI.instance.loginAdmin(context,
+          email: controlEmail.text.trim(),
+          password: controlPassword.text.trim());
+      setState(() {
+        _isInAsyncCall = false;
+      });
     });
   }
 
@@ -57,10 +80,7 @@ class _LoginAdminState extends State<LoginAdmin> {
                             height: 10,
                           ),
                           MyLoginField(
-                            onChanged: (String value) {
-                              email = value;
-                              print(email);
-                            },
+                            controller: controlEmail,
                             hintText: "correo electrónico",
                             keyboardType: TextInputType.emailAddress,
                           ),
@@ -68,6 +88,7 @@ class _LoginAdminState extends State<LoginAdmin> {
                             height: 20,
                           ),
                           MyLoginField(
+                            controller: controlPassword,
                             hintText: "Ingrese su contraseña",
                             obscureText: _isHidden,
                             icon: IconButton(
@@ -76,10 +97,6 @@ class _LoginAdminState extends State<LoginAdmin> {
                                   ? Icon(Icons.visibility_off)
                                   : Icon(Icons.visibility),
                             ),
-                            onChanged: (String value) {
-                              _password = value;
-                              print(_password);
-                            },
                           ),
                           Text(
                             message,
@@ -92,11 +109,7 @@ class _LoginAdminState extends State<LoginAdmin> {
                               style: TextStyle(color: kMainColorExtraLight),
                             ),
                             onPressed: () {
-                              Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          PruebaPaises()));
+                              userSignIn();
                             },
                             colour: Colors.grey[850],
                           ),

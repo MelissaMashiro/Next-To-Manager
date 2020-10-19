@@ -13,6 +13,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
+import 'services/my_api.dart';
+
 SharedPreferences localStorage;
 
 class LoginResidente extends StatefulWidget {
@@ -52,51 +54,12 @@ class _LoginResidenteState extends State<LoginResidente> {
     });
     //simulate a service call
     Future.delayed(Duration(seconds: 1), () async {
-      //futuredelayed es para que mientras carga, se muestre la barra de loading
-      var url = "https://ssolutiones.com/prueba_nextToManager/login.php";
-      var data = {
-        "email": controlEmail.text,
-        "password": controlPassword.text,
-      };
-      var res = await http.post(url, body: data);
-
-      dataUser = json.decode(res.body);
-      Map mapaData = dataUser[0] as Map;
-      //print(mapaData);
-
-      if (mapaData.containsValue('true')) {
-        //SHARED PREFERENCES
-        SharedPreferences pref = await SharedPreferences.getInstance();
-        pref.setBool("isLogin", true);
-        pref.setString("email", controlEmail.text);
-
-        setState(() {
-          _isInAsyncCall = false;
-        });
-        //LOGIN EXITOSO
-        Fluttertoast.showToast(
-            msg: 'Bienvenido a Next To Manager',
-            gravity: ToastGravity.CENTER,
-            backgroundColor: Colors.green);
-//yendo al dashboard
-        //Navigator.pushNamed(context, HomeResidentePage.id);
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (BuildContext context) => HomeResidentePage()));
-      } else if (mapaData.containsValue('false')) {
-        //SHARED PREFERENCES
-        SharedPreferences pref = await SharedPreferences.getInstance();
-        pref.setBool("isLogin", false);
-        setState(() {
-          _isInAsyncCall = false;
-        });
-        //LOGIN NO EXITOSO
-        Fluttertoast.showToast(
-            msg: 'Error credenciales',
-            gravity: ToastGravity.CENTER,
-            backgroundColor: Colors.red);
-      }
+      MyAPI.instance.login(context,
+          email: controlEmail.text.trim(),
+          password: controlPassword.text.trim());
+      setState(() {
+        _isInAsyncCall = false;
+      });
     });
   }
 
